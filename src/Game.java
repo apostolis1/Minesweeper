@@ -1,3 +1,5 @@
+import exception.InvalidDescriptionException;
+import exception.InvalidValueException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,6 +12,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import reader.Description;
+import reader.Reader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,11 +23,13 @@ public class Game  extends Application{
     Integer size;
     GridPane grid, informationPane;
     BorderPane mainPane;
+    Description gameDescription;
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Minesweeper");
         GridPane applicationGrid = new GridPane();
         VBox applicationVBox = new VBox();
+        getGameDescription();
         this.mainPane = new BorderPane();
         this.informationPane = getInformationPane();
         this.grid = getGridPane();
@@ -79,6 +85,12 @@ public class Game  extends Application{
             }
         });
         MenuItem m2 = new MenuItem("Load");
+        m2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                getGameDescription();
+            }
+        });
         MenuItem m3 = new MenuItem("Start");
 
         // add menu items to menu
@@ -226,6 +238,18 @@ public class Game  extends Application{
 
         }
         return true;
+    }
+
+    private void getGameDescription() {
+        Reader reader = new Reader();
+        Description description = null;
+        try {
+            description = reader.getFileContents("invalid_range_example.txt");
+        } catch (InvalidDescriptionException | InvalidValueException e) {
+            System.out.println("Popup will be created");
+        }
+        this.gameDescription = description;
+        return;
     }
 
     private void writeMines() {
