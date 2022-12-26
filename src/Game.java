@@ -244,7 +244,7 @@ public class Game  extends Application{
         Reader reader = new Reader();
         Description description = null;
         try {
-            description = reader.getFileContents("invalid_range_example.txt");
+            description = reader.getFileContents("level_1_example.txt");
         } catch (InvalidDescriptionException | InvalidValueException e) {
             System.out.println("Popup will be created");
         }
