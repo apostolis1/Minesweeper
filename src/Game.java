@@ -100,4 +100,33 @@ public class Game {
             return null;
         return this.grid[x][y];
     }
+
+    public void revealTileRecursive(int x, int y) {
+        TileInternal t = getTileByCoordinates(x, y);
+        if (t.getMine()) {
+            // the user lost
+//            this.game.gameLoss();
+            return ;
+        }
+        ArrayList<TileInternal> neighbors = getNeighborsByCoordinates(x, y);
+        int minesInNeighbors = this.countMines(neighbors);
+        t.setRevealed(true);
+        if (minesInNeighbors == 0) {
+            for (TileInternal neighbor : neighbors) {
+                // If the user has incorrectly set a flag, we don't want to give him the information that
+                // the tile can be revealed
+                if (!neighbor.getRevealed() && !neighbor.getFlagSet() && !neighbor.getMine())
+                    this.revealTileRecursive(neighbor.x, neighbor.y);
+            }
+        }
+    }
+
+    public int countMines(ArrayList<TileInternal> neighbors) {
+        int minesInNeighbors = 0;
+        for (TileInternal t : neighbors) {
+            if (t.getMine())
+                minesInNeighbors++;
+        }
+        return minesInNeighbors;
+    }
 }

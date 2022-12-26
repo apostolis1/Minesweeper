@@ -30,6 +30,14 @@ public class TileInternal {
         isMine = mine;
     }
 
+    public Boolean getFlagSet() {
+        return flagSet;
+    }
+
+    public void setFlagSet(Boolean flagSet) {
+        this.flagSet = flagSet;
+    }
+
     public Boolean getSuperMine() {
         return isSuperMine;
     }
