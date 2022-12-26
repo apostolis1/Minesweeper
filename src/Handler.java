@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Handler implements EventHandler<MouseEvent>{
 //
-    public Game game;
-    public Handler(Game g) {
+    public GameGui game;
+    public Handler(GameGui g) {
         this.game = g;
     }
 
