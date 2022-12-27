@@ -147,6 +147,15 @@ public class GameGui extends Application{
             description = reader.getFileContents(filename);
         } catch (InvalidDescriptionException | InvalidValueException e) {
             System.out.println("Popup will be created");
+            Dialog<String> dialog = new Dialog<String>();
+            //Setting the title
+            dialog.setTitle("Error");
+            ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+            //Setting the content of the dialog
+            dialog.setContentText("There is an error with the scenario ID you tried to load!");
+            //Adding buttons to the dialog pane
+            dialog.getDialogPane().getButtonTypes().add(type);
+            dialog.showAndWait();
         }
         this.gameDescription = description;
     }
