@@ -3,6 +3,8 @@ package gui;
 import exception.InvalidDescriptionException;
 import exception.InvalidValueException;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -14,10 +16,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import reader.Description;
 import reader.Reader;
 import internal.Game;
 import internal.TileInternal;
+import sun.security.krb5.internal.crypto.Des;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Optional;
 
 public class GameGui extends Application{
     GridPane grid, informationPane;
@@ -25,6 +33,7 @@ public class GameGui extends Application{
     Label labelMines, labelFlags, labelTimeRemaining;
     Game internalGame;
     Description gameDescription;
+    final String medialabLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/";
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Minesweeper");
@@ -70,7 +79,8 @@ public class GameGui extends Application{
         m1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                startNewGame();
+//                startNewGame();
+                createDescriptionDialog();
             }
         });
         MenuItem m2 = new MenuItem("Load");
@@ -81,7 +91,12 @@ public class GameGui extends Application{
             }
         });
         MenuItem m3 = new MenuItem("Start");
-
+        m3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                startNewGame();
+            }
+        });
         // add menu items to menu
         applicationMenu.getItems().add(m1);
         applicationMenu.getItems().add(m2);
@@ -96,6 +111,130 @@ public class GameGui extends Application{
         mb.getMenus().add(applicationMenu);
         mb.getMenus().add(detailsMenu);
         return mb;
+    }
+
+    private void createDescriptionDialog() {
+        Dialog<Description> dialog = new Dialog<>();
+        dialog.setTitle("Create Scenario");
+        dialog.setHeaderText("This is a custom dialog. Enter info and \n" +
+                "press Okay (or click title bar 'X' for cancel).");
+        dialog.setResizable(true);
+
+        Label label1 = new Label("SCENARIO-ID (filename will be for example SCENARIO-1.txt): ");
+        Label label2 = new Label("Level (1 or 2): ");
+        Label label3 = new Label("Number of mines: ");
+        Label label4 = new Label("Supermine in game (0 or 1): ");
+        Label label5 = new Label("Time in seconds: ");
+
+        TextField text1 = new TextField();
+        TextField text2 = new TextField();
+        TextField text3 = new TextField();
+        TextField text4 = new TextField();
+        TextField text5 = new TextField();
+
+        text1.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    text1.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        text2.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    text2.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        text3.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    text3.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        text4.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    text4.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        text5.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    text5.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
+        GridPane grid = new GridPane();
+        grid.add(label1, 1, 1);
+        grid.add(text1, 2, 1);
+
+        grid.add(label2, 1, 2);
+        grid.add(text2, 2, 2);
+
+        grid.add(label3, 1, 3);
+        grid.add(text3, 2, 3);
+
+        grid.add(label4, 1, 4);
+        grid.add(text4, 2, 4);
+
+        grid.add(label5, 1, 5);
+        grid.add(text5, 2, 5);
+
+        dialog.getDialogPane().setContent(grid);
+
+        ButtonType buttonTypeOk = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+
+        dialog.setResultConverter(new Callback<ButtonType, Description>() {
+            @Override
+            public Description call(ButtonType b) {
+
+                if (b == buttonTypeOk) {
+
+                    try {
+                        return new Description(text2.getText(), text3.getText(), text5.getText(), text4.getText());
+                    } catch (InvalidValueException e) {
+                        // We could handle it here, but the requirements are that the error is handled when the
+                        // description is loaded, so we will just ignore the exception here and handle it when
+                        // loading the txt file
+                        System.out.println("Bad Description Created");
+                    }
+                }
+
+                return null;
+            }
+        });
+
+        Optional<Description> result = dialog.showAndWait();
+        // No matter what happened, we want to write the values in the txt file as explained above
+        try {
+            String scenarioLocation = medialabLocation + "SCENARIO-" + text1.getText() + ".txt";
+            FileWriter myWriter = new FileWriter(scenarioLocation);
+            myWriter.write(String.format("%s%n%s%n%s%n%s", text2.getText(), text3.getText(), text4.getText(), text5.getText()));
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
     public Tile getTileByCoordinates(int x, int y) {
