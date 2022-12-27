@@ -126,77 +126,77 @@ public class GameGui extends Application{
         Label label4 = new Label("Supermine in game (0 or 1): ");
         Label label5 = new Label("Time in seconds: ");
 
-        TextField text1 = new TextField();
-        TextField text2 = new TextField();
-        TextField text3 = new TextField();
-        TextField text4 = new TextField();
-        TextField text5 = new TextField();
+        TextField textScenarioId = new TextField();
+        TextField textLevel = new TextField();
+        TextField textNumberOfMines = new TextField();
+        TextField textSupermine = new TextField();
+        TextField textTime = new TextField();
 
-        text1.textProperty().addListener(new ChangeListener<String>() {
+        textScenarioId.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
-                    text1.setText(newValue.replaceAll("[^\\d]", ""));
+                    textScenarioId.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
         });
 
-        text2.textProperty().addListener(new ChangeListener<String>() {
+        textLevel.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
-                    text2.setText(newValue.replaceAll("[^\\d]", ""));
+                    textLevel.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
         });
 
-        text3.textProperty().addListener(new ChangeListener<String>() {
+        textNumberOfMines.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
-                    text3.setText(newValue.replaceAll("[^\\d]", ""));
+                    textNumberOfMines.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
         });
 
-        text4.textProperty().addListener(new ChangeListener<String>() {
+        textSupermine.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
-                    text4.setText(newValue.replaceAll("[^\\d]", ""));
+                    textSupermine.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
         });
 
-        text5.textProperty().addListener(new ChangeListener<String>() {
+        textTime.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
-                    text5.setText(newValue.replaceAll("[^\\d]", ""));
+                    textTime.setText(newValue.replaceAll("[^\\d]", ""));
                 }
             }
         });
 
         GridPane grid = new GridPane();
         grid.add(label1, 1, 1);
-        grid.add(text1, 2, 1);
+        grid.add(textScenarioId, 2, 1);
 
         grid.add(label2, 1, 2);
-        grid.add(text2, 2, 2);
+        grid.add(textLevel, 2, 2);
 
         grid.add(label3, 1, 3);
-        grid.add(text3, 2, 3);
+        grid.add(textNumberOfMines, 2, 3);
 
         grid.add(label4, 1, 4);
-        grid.add(text4, 2, 4);
+        grid.add(textSupermine, 2, 4);
 
         grid.add(label5, 1, 5);
-        grid.add(text5, 2, 5);
+        grid.add(textTime, 2, 5);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -210,7 +210,7 @@ public class GameGui extends Application{
                 if (b == buttonTypeOk) {
 
                     try {
-                        return new Description(text2.getText(), text3.getText(), text5.getText(), text4.getText());
+                        return new Description(textLevel.getText(), textNumberOfMines.getText(), textTime.getText(), textSupermine.getText());
                     } catch (InvalidValueException e) {
                         // We could handle it here, but the requirements are that the error is handled when the
                         // description is loaded, so we will just ignore the exception here and handle it when
@@ -226,9 +226,9 @@ public class GameGui extends Application{
         Optional<Description> result = dialog.showAndWait();
         // No matter what happened, we want to write the values in the txt file as explained above
         try {
-            String scenarioLocation = medialabLocation + "SCENARIO-" + text1.getText() + ".txt";
+            String scenarioLocation = medialabLocation + "SCENARIO-" + textScenarioId.getText() + ".txt";
             FileWriter myWriter = new FileWriter(scenarioLocation);
-            myWriter.write(String.format("%s%n%s%n%s%n%s", text2.getText(), text3.getText(), text4.getText(), text5.getText()));
+            myWriter.write(String.format("%s%n%s%n%s%n%s", textLevel.getText(), textNumberOfMines.getText(), textTime.getText(), textSupermine.getText()));
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
