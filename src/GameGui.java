@@ -23,29 +23,18 @@ public class GameGui extends Application{
     Integer size;
     GridPane grid, informationPane;
     BorderPane mainPane;
+    Game internalGame;
     Description gameDescription;
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Minesweeper");
-        GridPane applicationGrid = new GridPane();
         VBox applicationVBox = new VBox();
         getGameDescription();
         this.mainPane = new BorderPane();
         this.informationPane = getInformationPane();
-        this.grid = getGridPane();
+        startNewGame();
         MenuBar mBar = getMenuBar();
-        this.mainPane.setCenter(this.grid);
-//        applicationGrid.add(mBar, 0,0);
-//        applicationGrid.add(informationPane, 0, 1);
-//        applicationGrid.add(this.mainPane, 0, 2);
         applicationVBox.getChildren().addAll(mBar, informationPane, this.mainPane);
-        for (int i=0; i< size; ++i) {
-            ColumnConstraints tempConstraints = new ColumnConstraints();
-            tempConstraints.setPercentWidth(100/ (float)size);
-            this.grid.getColumnConstraints().add(tempConstraints);
-        }
-
-//        Scene scene = new Scene(applicationGrid, 600, 275);
         Scene scene = new Scene(applicationVBox, 9*50, 600);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
@@ -76,12 +65,12 @@ public class GameGui extends Application{
     private MenuBar getMenuBar() {
         MenuBar mb = new MenuBar();
         Menu applicationMenu = new Menu("Application");
-        // create menuitems
+        // create menu items
         MenuItem m1 = new MenuItem("Create");
         m1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                createNewGrid();
+                startNewGame();
             }
         });
         MenuItem m2 = new MenuItem("Load");
@@ -109,52 +98,6 @@ public class GameGui extends Application{
         return mb;
     }
 
-    private void createNewGrid() {
-        grid = getGridPane();
-        mainPane.setCenter(grid);
-    }
-
-    private GridPane getGridPane() {
-        // Returns a new GridPane object that contains the visual information of the MineSweeper
-        GridPane grid = new GridPane();
-        grid.addEventFilter(MouseEvent.MOUSE_CLICKED, new Handler(this));
-        this.size = 10;
-        int numberOfMines = 10;
-        ArrayList<Integer> allIndices = new ArrayList<>();
-        for (int i =0 ; i< size; i++) {
-            for (int j=0; j<size; j++) {
-                allIndices.add(i*size + j);
-            }
-        }
-
-        Collections.shuffle(allIndices);
-        System.out.println(allIndices.toString());
-        ArrayList<Integer> mineIndices = new ArrayList<>();
-
-        // Pick the first numberOfMines indices and mark them as mines
-        // Mark the first one as a supermine if the game contains one
-        // Due to shuffling, the indices are random
-        for (int i=0; i<numberOfMines; ++i)
-            mineIndices.add(allIndices.get(i));
-        // Write mine locations in file mines.txt
-
-        System.out.println(mineIndices.toString());
-        for (int i =0; i< size; ++i) {
-            for (int j = 0; j < size; ++j) {
-                Tile btn = new Tile("", i,j);
-                if (mineIndices.contains(i*this.size + j))
-                    btn.setMine();
-//                grid.add(btn, i, j);
-                grid.getChildren().add(btn);
-                GridPane.setRowIndex(btn, i);
-                GridPane.setColumnIndex(btn, j);
-                System.out.println(GridPane.getRowIndex(btn));
-
-            }
-        }
-        return grid;
-    }
-
     public Tile getTileByCoordinates(int x, int y) {
         for (Node tile : this.grid.getChildren()) {
             Tile t = (Tile) tile;
@@ -164,38 +107,6 @@ public class GameGui extends Application{
         return null;
     }
 
-    public ArrayList<Tile> getNeighborsByCoordinates(int x, int y) {
-        ArrayList<Tile> result = new ArrayList<>();
-        Tile temp;
-        // Get elemtns of above row
-        temp = getTileByCoordinates(x-1,y-1);
-        if (temp != null)
-            result.add(temp);
-        temp = getTileByCoordinates(x-1,y);
-        if (temp != null)
-            result.add(temp);
-        temp = getTileByCoordinates(x-1,y+1);
-        if (temp != null)
-            result.add(temp);
-        // Get elements of same row
-        temp = getTileByCoordinates(x,y-1);
-        if (temp != null)
-            result.add(temp);
-        temp = getTileByCoordinates(x,y+1);
-        if (temp != null)
-            result.add(temp);
-        // Get elements of next row
-        temp = getTileByCoordinates(x+1,y-1);
-        if (temp != null)
-            result.add(temp);
-        temp = getTileByCoordinates(x+1,y);
-        if (temp != null)
-            result.add(temp);
-        temp = getTileByCoordinates(x+1,y+1);
-        if (temp != null)
-            result.add(temp);
-        return result;
-    }
 
     public void gameLoss() {
         //Creating a dialog
@@ -208,7 +119,7 @@ public class GameGui extends Application{
         //Adding buttons to the dialog pane
         dialog.getDialogPane().getButtonTypes().add(type);
         dialog.showAndWait();
-        createNewGrid();
+        startNewGame();
     }
 
     public void gameWin() {
@@ -222,23 +133,9 @@ public class GameGui extends Application{
         //Adding buttons to the dialog pane
         dialog.getDialogPane().getButtonTypes().add(type);
         dialog.showAndWait();
-        createNewGrid();
+        startNewGame();
     }
 
-    public boolean isGameWon() {
-//        Returns true if the game is already won by the player
-        // Meaning all non mine tiles are revealed
-        for (Node tile : this.grid.getChildren()) {
-            Tile t = (Tile) tile;
-            System.out.print(t);
-            System.out.print(t.isRevealed);
-            System.out.println(t.isMine);
-            if (!t.isRevealed && !t.isMine)
-                return false;
-
-        }
-        return true;
-    }
 
     private void getGameDescription() {
         Reader reader = new Reader();
@@ -254,6 +151,41 @@ public class GameGui extends Application{
 
     private void writeMines() {
         
+    }
+
+    private GridPane initGridFromGame() {
+        // The first call that simply creates the grid pane according to the internal game object
+        GridPane grid = new GridPane();
+        grid.addEventFilter(MouseEvent.MOUSE_CLICKED, new Handler(this.internalGame, this));
+        for (int i =0; i< this.internalGame.gridSize; ++i) {
+            for (int j = 0; j < this.internalGame.gridSize; ++j) {
+                Tile btn = new Tile("", i,j);
+
+                grid.getChildren().add(btn);
+                GridPane.setRowIndex(btn, i);
+                GridPane.setColumnIndex(btn, j);
+                System.out.println(GridPane.getRowIndex(btn));
+
+            }
+        }
+        return grid;
+    }
+
+    public void startNewGame() {
+        this.internalGame = new Game(10, 10, true);
+        grid = this.initGridFromGame();
+        mainPane.setCenter(grid);
+        return;
+    }
+
+    public void updateGridFromGame() {
+        for (int i =0; i< this.internalGame.gridSize; ++i) {
+            for (int j = 0; j < this.internalGame.gridSize; ++j) {
+                Tile t = getTileByCoordinates(i, j);
+                TileInternal tInternal = this.internalGame.getTileByCoordinates(i, j);
+                t.updateTileFromInternal(tInternal);
+            }
+        }
     }
     public static void main(String[] args) {
         launch(args);

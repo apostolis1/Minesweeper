@@ -2,7 +2,7 @@ public class TileInternal {
     // This is the internal representation for the Tiles
     // It is used to separate the backend logic from the frontend
 
-    public int x,y;
+    public int x,y, neighborMines;
     private Boolean isMine, isSuperMine, flagSet, isRevealed;
 
     public TileInternal(int x, int y, Boolean isMine, Boolean isSuperMine) {

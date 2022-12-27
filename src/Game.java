@@ -44,6 +44,12 @@ public class Game {
                 grid[i][j] = tile;
             }
         }
+        for (int i =0; i< this.gridSize; ++i) {
+            for (int j = 0; j < this.gridSize; ++j) {
+                ArrayList<TileInternal> neighbors = getNeighborsByCoordinates(i, j);
+                grid[i][j].neighborMines = this.countMines(neighbors);
+            }
+        }
     }
 
     void tileLeftClicked(int x, int y) {
@@ -109,9 +115,8 @@ public class Game {
             return ;
         }
         ArrayList<TileInternal> neighbors = getNeighborsByCoordinates(x, y);
-        int minesInNeighbors = this.countMines(neighbors);
         t.setRevealed(true);
-        if (minesInNeighbors == 0) {
+        if (t.neighborMines == 0) {
             for (TileInternal neighbor : neighbors) {
                 // If the user has incorrectly set a flag, we don't want to give him the information that
                 // the tile can be revealed
@@ -128,5 +133,32 @@ public class Game {
                 minesInNeighbors++;
         }
         return minesInNeighbors;
+    }
+
+    public void gameLoss() {
+        //Dump stats
+        System.out.println("Internal game loss");
+    }
+
+    public void gameWin() {
+        //Dump stats
+        System.out.println("Internal game win");
+    }
+
+    public boolean isGameWon() {
+//        Returns true if the game is already won by the player
+        // Meaning all non mine tiles are revealed
+
+        for (int i =0; i< this.gridSize; ++i) {
+            for (int j = 0; j < this.gridSize; ++j) {
+                TileInternal t = this.grid[i][j];
+                System.out.print(t);
+                System.out.print(t.getRevealed());
+                System.out.println(t.getMine());
+                if (!t.getRevealed() && !t.getMine())
+                    return false;
+            }
+        }
+        return true;
     }
 }

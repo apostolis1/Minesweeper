@@ -6,9 +6,11 @@ import java.util.ArrayList;
 
 public class Handler implements EventHandler<MouseEvent>{
 //
-    public GameGui game;
-    public Handler(GameGui g) {
+    public Game game;
+    public GameGui gameGui;
+    public Handler(Game g, GameGui gameGui) {
         this.game = g;
+        this.gameGui = gameGui;
     }
 
     @Override
@@ -19,48 +21,34 @@ public class Handler implements EventHandler<MouseEvent>{
         Tile tileClicked = (Tile) event.getTarget();
 
         System.out.println(tileClicked.toString());
-        if (tileClicked.isRevealed)
+        // Avoid any updates if the tile is already revealed
+        if (this.game.grid[tileClicked.x][tileClicked.y].getRevealed())
             return;
         if (event.getButton() == MouseButton.SECONDARY) {
+            // Right click
             System.out.println("Right click");
-            tileClicked.rightClicked();
+            this.game.tileRightClicked(tileClicked.x, tileClicked.y);
+            this.gameGui.updateGridFromGame();
         }
         else {
+            // Left click
             System.out.println("Left Click");
             System.out.println(tileClicked.x);
             System.out.println(tileClicked.y);
-            revealTileRecursive(tileClicked);
+//            Check if the user clicked on a mine
+            if (game.isTileMine(tileClicked.x, tileClicked.y)) {
+                game.gameLoss();
+                gameGui.gameLoss();
+                return ;
+            }
+            this.game.revealTileRecursive(tileClicked.x, tileClicked.y);
+            this.gameGui.updateGridFromGame();
+//            revealTileRecursive(tileClicked);
 //            After all tiles are revealed recursively, check if the game is won
-            if (this.game.isGameWon())
+            if (this.game.isGameWon()) {
                 this.game.gameWin();
-        }
-    }
-
-    public void revealTileRecursive(Tile t) {
-        if (t.isMine) {
-        // the user lost
-            this.game.gameLoss();
-            return ;
-        }
-        ArrayList<Tile> neighbors = this.game.getNeighborsByCoordinates(t.x, t.y);
-        Integer minesInNeighbors = this.countMines(neighbors);
-        t.reveal(minesInNeighbors);
-        if (minesInNeighbors == 0) {
-            for (Tile neighbor : neighbors) {
-                // If the user has incorrectly set a flag, we don't want to give him the information that
-                // the tile can be revealed
-                if (!neighbor.isRevealed && !neighbor.flagSet && !neighbor.isMine)
-                    this.revealTileRecursive(neighbor);
+                this.gameGui.gameWin();
             }
         }
     }
-    public Integer countMines(ArrayList<Tile> tiles) {
-        Integer minesInNeighbors = 0;
-        for (Tile t : tiles) {
-            if (t.isMine)
-                minesInNeighbors++;
-        }
-        return minesInNeighbors;
-    }
-
 }
