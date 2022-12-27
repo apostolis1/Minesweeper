@@ -24,7 +24,7 @@ public class GameGui extends Application{
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Minesweeper");
         VBox applicationVBox = new VBox();
-        getGameDescription();
+//        getGameDescription();
         this.mainPane = new BorderPane();
         this.informationPane = getInformationPane();
         startNewGame();
@@ -133,10 +133,17 @@ public class GameGui extends Application{
 
 
     private void getGameDescription() {
+        // Create a text input dialog to get the SCENARIO-ID
+        TextInputDialog td = new TextInputDialog();
+        td.setHeaderText("Provide the ID of the scenario you want to play. Will search for the file named SCENARIO-{ID} in the predefined medialab folder");
+        td.showAndWait();
+        String scenarioId = td.getEditor().getText();
+        System.out.printf("User provided %s ID%n", scenarioId);
         Reader reader = new Reader();
         Description description = null;
         try {
-            description = reader.getFileContents("level_1_example.txt");
+            String filename = String.format("SCENARIO-%s.txt", scenarioId);
+            description = reader.getFileContents(filename);
         } catch (InvalidDescriptionException | InvalidValueException e) {
             System.out.println("Popup will be created");
         }
