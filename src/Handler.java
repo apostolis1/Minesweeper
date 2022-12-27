@@ -29,6 +29,7 @@ public class Handler implements EventHandler<MouseEvent>{
             System.out.println("Right click");
             this.game.tileRightClicked(tileClicked.x, tileClicked.y);
             this.gameGui.updateGridFromGame();
+            this.gameGui.updateInfoPanelFromGame();
         }
         else {
             // Left click
@@ -43,6 +44,7 @@ public class Handler implements EventHandler<MouseEvent>{
             }
             this.game.revealTileRecursive(tileClicked.x, tileClicked.y);
             this.gameGui.updateGridFromGame();
+            this.gameGui.updateInfoPanelFromGame();
 //            revealTileRecursive(tileClicked);
 //            After all tiles are revealed recursively, check if the game is won
             if (this.game.isGameWon()) {

@@ -18,6 +18,7 @@ import reader.Reader;
 public class GameGui extends Application{
     GridPane grid, informationPane;
     BorderPane mainPane;
+    Label labelMines, labelFlags, labelTimeRemaining;
     Game internalGame;
     Description gameDescription;
     @Override
@@ -41,18 +42,18 @@ public class GameGui extends Application{
 
         Label label1 = new Label("Mines in Game");
         infoPane.add(label1, 0,0);
-        Label label2 = new Label("0");
-        infoPane.add(label2, 1,0);
+        labelMines = new Label("0");
+        infoPane.add(labelMines, 1,0);
 
         Label labelTime = new Label("Time Remaining (secs)");
         infoPane.add(labelTime, 0,1);
-        Label timeValue = new Label("0");
-        infoPane.add(timeValue, 1, 1);
+        labelTimeRemaining = new Label("0");
+        infoPane.add(labelTimeRemaining, 1, 1);
 
         Label flagsLabel = new Label("Flags placed");
         infoPane.add(flagsLabel, 0,2);
-        Label flagsValue = new Label("0");
-        infoPane.add(flagsValue, 1,2);
+        labelFlags = new Label("0");
+        infoPane.add(labelFlags, 1,2);
         infoPane.setStyle("-fx-background-color: " + "green" + ";");
         return infoPane;
     }
@@ -195,4 +196,11 @@ public class GameGui extends Application{
     }
 
 
+    public void updateInfoPanelFromGame() {
+        // Update the label for flags
+        int flagsSet = this.internalGame.getNumberOfFlagsSet();
+        this.labelFlags.setText(Integer.toString(flagsSet));
+        // Update number of mines in current game
+        this.labelMines.setText(Integer.toString(internalGame.numberOfMines));
+    }
 }

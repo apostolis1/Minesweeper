@@ -187,4 +187,16 @@ public class Game {
             e.printStackTrace();
         }
     }
+
+    public int getNumberOfFlagsSet() {
+        int result = 0;
+        for (int i =0; i< this.gridSize; ++i) {
+            for (int j = 0; j < this.gridSize; ++j) {
+                TileInternal t = this.grid[i][j];
+                if (t.getFlagSet())
+                        result++;
+            }
+        }
+        return result;
+    }
 }
