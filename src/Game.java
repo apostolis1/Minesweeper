@@ -1,13 +1,14 @@
-import javafx.scene.Node;
-import javafx.scene.layout.GridPane;
 import reader.Description;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Game {
     int gridSize, numberOfMoves, numberOfMines;
     boolean hasSuperMine;
+    final String minesTextLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/mines.txt";
     TileInternal [][] grid;
 
     public Game(int gridSize, int numberOfMines, boolean hasSuperMine) {
@@ -37,6 +38,8 @@ public class Game {
         if (this.hasSuperMine) {
             superMinePosition = mineIndices.get(0);
         }
+        // Write mine locations to file
+        writeMineLocations(mineIndices, superMinePosition);
         for (int i =0; i< this.gridSize; ++i) {
             for (int j = 0; j < this.gridSize; ++j) {
                 boolean hasMine = mineIndices.contains(i*this.gridSize + j);
@@ -165,5 +168,23 @@ public class Game {
             }
         }
         return true;
+    }
+
+    public void writeMineLocations(ArrayList<Integer> mineIndices, int superMinePosition) {
+        try {
+            FileWriter myWriter = new FileWriter(minesTextLocation);
+            for (int mineIndex : mineIndices) {
+                System.out.printf("Writing to file %d%n", mineIndex);
+                int row = mineIndex / this.gridSize;
+                int col = mineIndex % this.gridSize;
+                int isSuperMine = (mineIndex == superMinePosition) ? 1 : 0;
+                myWriter.write(String.format("%d,%d,%d%n", row, col, isSuperMine));
+            }
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }

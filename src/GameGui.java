@@ -8,19 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import reader.Description;
 import reader.Reader;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 public class GameGui extends Application{
-
-    Integer size;
     GridPane grid, informationPane;
     BorderPane mainPane;
     Game internalGame;
@@ -146,11 +141,6 @@ public class GameGui extends Application{
             System.out.println("Popup will be created");
         }
         this.gameDescription = description;
-        return;
-    }
-
-    private void writeMines() {
-        
     }
 
     private GridPane initGridFromGame() {
@@ -182,7 +172,6 @@ public class GameGui extends Application{
         this.internalGame = new Game(gameDescription);
         grid = this.initGridFromGame();
         mainPane.setCenter(grid);
-        return;
     }
 
     public void updateGridFromGame() {
