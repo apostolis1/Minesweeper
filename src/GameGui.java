@@ -180,6 +180,7 @@ public class GameGui extends Application{
         this.internalGame = new Game(gameDescription);
         grid = this.initGridFromGame();
         mainPane.setCenter(grid);
+        this.updateInfoPanelFromGame();
     }
 
     public void updateGridFromGame() {
