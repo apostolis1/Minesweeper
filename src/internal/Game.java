@@ -1,3 +1,5 @@
+package internal;
+
 import reader.Description;
 
 import java.io.FileWriter;
@@ -10,6 +12,18 @@ public class Game {
     boolean hasSuperMine;
     final String minesTextLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/mines.txt";
     TileInternal [][] grid;
+
+    public TileInternal[][] getGrid() {
+        return grid;
+    }
+
+    public int getNumberOfMines() {
+        return numberOfMines;
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
 
     public Game(int gridSize, int numberOfMines, boolean hasSuperMine) {
         this.gridSize = gridSize;
@@ -64,11 +78,11 @@ public class Game {
 
     }
 
-    void tileRightClicked(int x, int y) {
+    public void tileRightClicked(int x, int y) {
         grid[x][y].rightClicked();
     }
 
-    boolean isTileMine(int x, int y) {
+    public boolean isTileMine(int x, int y) {
         return this.grid[x][y].getMine();
     }
 

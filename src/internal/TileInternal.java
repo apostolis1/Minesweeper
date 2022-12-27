@@ -1,3 +1,5 @@
+package internal;
+
 public class TileInternal {
     // This is the internal representation for the Tiles
     // It is used to separate the backend logic from the frontend

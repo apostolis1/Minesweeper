@@ -1,3 +1,5 @@
+package gui;
+
 import exception.InvalidDescriptionException;
 import exception.InvalidValueException;
 import javafx.application.Application;
@@ -14,6 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import reader.Description;
 import reader.Reader;
+import internal.Game;
+import internal.TileInternal;
 
 public class GameGui extends Application{
     GridPane grid, informationPane;
@@ -40,7 +44,7 @@ public class GameGui extends Application{
     private GridPane getInformationPane() {
         GridPane infoPane = new GridPane();
 
-        Label label1 = new Label("Mines in Game");
+        Label label1 = new Label("Mines in internal.Game");
         infoPane.add(label1, 0,0);
         labelMines = new Label("0");
         infoPane.add(labelMines, 1,0);
@@ -164,8 +168,8 @@ public class GameGui extends Application{
         // The first call that simply creates the grid pane according to the internal game object
         GridPane grid = new GridPane();
         grid.addEventFilter(MouseEvent.MOUSE_CLICKED, new Handler(this.internalGame, this));
-        for (int i =0; i< this.internalGame.gridSize; ++i) {
-            for (int j = 0; j < this.internalGame.gridSize; ++j) {
+        for (int i =0; i< this.internalGame.getGridSize(); ++i) {
+            for (int j = 0; j < this.internalGame.getGridSize(); ++j) {
                 Tile btn = new Tile("", i,j);
 
                 grid.getChildren().add(btn);
@@ -185,7 +189,7 @@ public class GameGui extends Application{
             return ;
         }
 //        Create a new game for the given description
-//        this.internalGame = new Game(10, 10, true);
+//        this.internalGame = new internal.Game(10, 10, true);
         this.internalGame = new Game(gameDescription);
         grid = this.initGridFromGame();
         mainPane.setCenter(grid);
@@ -193,8 +197,8 @@ public class GameGui extends Application{
     }
 
     public void updateGridFromGame() {
-        for (int i =0; i< this.internalGame.gridSize; ++i) {
-            for (int j = 0; j < this.internalGame.gridSize; ++j) {
+        for (int i =0; i< this.internalGame.getGridSize(); ++i) {
+            for (int j = 0; j < this.internalGame.getGridSize(); ++j) {
                 Tile t = getTileByCoordinates(i, j);
                 TileInternal tInternal = this.internalGame.getTileByCoordinates(i, j);
                 t.updateTileFromInternal(tInternal);
@@ -211,6 +215,6 @@ public class GameGui extends Application{
         int flagsSet = this.internalGame.getNumberOfFlagsSet();
         this.labelFlags.setText(Integer.toString(flagsSet));
         // Update number of mines in current game
-        this.labelMines.setText(Integer.toString(internalGame.numberOfMines));
+        this.labelMines.setText(Integer.toString(internalGame.getNumberOfMines()));
     }
 }

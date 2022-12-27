@@ -1,3 +1,6 @@
+package gui;
+
+import internal.TileInternal;
 import javafx.scene.control.Button;
 
 public class Tile extends Button {
@@ -33,10 +36,15 @@ public class Tile extends Button {
     public void updateTileFromInternal(TileInternal tInternal) {
         if (tInternal.getRevealed()) {
             setBackgroundReveal();
-            if (tInternal.neighborMines != 0) {
+            // Revealed mines should have their icon set to mineUrl
+            // Mines can be revealed without the game ending in case of a supermine
+            if (tInternal.getMine())
+                this.setIcon(mineUrl);
+            else if (tInternal.neighborMines != 0) {
                 String numberToDisplay = Integer.toString(tInternal.neighborMines);
                 setText(numberToDisplay);
             }
+
             return;
         }
         if (tInternal.getFlagSet()) {

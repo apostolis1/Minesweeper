@@ -1,9 +1,9 @@
+package gui;
+
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-
-import java.util.ArrayList;
-
+import internal.Game;
 public class Handler implements EventHandler<MouseEvent>{
 //
     public Game game;
@@ -22,7 +22,7 @@ public class Handler implements EventHandler<MouseEvent>{
 
         System.out.println(tileClicked.toString());
         // Avoid any updates if the tile is already revealed
-        if (this.game.grid[tileClicked.x][tileClicked.y].getRevealed())
+        if (this.game.getGrid()[tileClicked.x][tileClicked.y].getRevealed())
             return;
         if (event.getButton() == MouseButton.SECONDARY) {
             // Right click
