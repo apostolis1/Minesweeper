@@ -1,5 +1,6 @@
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import reader.Description;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +51,10 @@ public class Game {
                 grid[i][j].neighborMines = this.countMines(neighbors);
             }
         }
+    }
+
+    public Game(Description description) {
+        this(description.getGridSize(), description.getNumberOfMines(), (description.getSuperMine() == 1));
     }
 
     void tileLeftClicked(int x, int y) {

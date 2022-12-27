@@ -5,7 +5,7 @@ import exception.InvalidValueException;
 public class Description {
 //    This could also be an Interface with 2 different Classes that implement it, but for
 //    such a small Class it is not worth it, the logic is quite simple and can be included in one Class
-    private final Integer level, size, numberOfMines, time, superMine;
+    private final Integer level, gridSize, numberOfMines, time, superMine;
 
     public Description(String level, String numberOfMines, String time, String superMine) throws InvalidValueException {
         try {
@@ -18,9 +18,9 @@ public class Description {
             throw new InvalidValueException();
         }
         if (this.level == 1)
-            this.size = 9;
+            this.gridSize = 9;
         else if (this.level == 2)
-            this.size = 16;
+            this.gridSize = 16;
         else throw new InvalidValueException();
     }
 
@@ -29,5 +29,21 @@ public class Description {
             throw new InvalidValueException();
         if (this.level == 2 && !(this.time >= 240 && this.time <= 360 && this.numberOfMines >= 35 && this.numberOfMines <= 45 && (this.superMine == 0 || this.superMine == 1)))
             throw new InvalidValueException();
+    }
+
+    public Integer getGridSize() {
+        return gridSize;
+    }
+
+    public Integer getNumberOfMines() {
+        return numberOfMines;
+    }
+
+    public Integer getTime() {
+        return time;
+    }
+
+    public Integer getSuperMine() {
+        return superMine;
     }
 }

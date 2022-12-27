@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Reader {
 //    A class to read contents from files and return a Description
-    final String DescriptionFolderPath = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab";
+    final String DescriptionFolderPath = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/";
 
     public Reader() {
         System.out.print(DescriptionFolderPath);

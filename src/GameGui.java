@@ -172,7 +172,14 @@ public class GameGui extends Application{
     }
 
     public void startNewGame() {
-        this.internalGame = new Game(10, 10, true);
+//        Check description to see if it was loaded correctly
+        if (this.gameDescription == null) {
+            System.out.println("Please load a valid description and try again");
+            return ;
+        }
+//        Create a new game for the given description
+//        this.internalGame = new Game(10, 10, true);
+        this.internalGame = new Game(gameDescription);
         grid = this.initGridFromGame();
         mainPane.setCenter(grid);
         return;
