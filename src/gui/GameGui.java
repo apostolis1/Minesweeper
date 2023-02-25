@@ -279,7 +279,9 @@ public class GameGui extends Application{
     private void getGameDescription() {
         // Create a text input dialog to get the SCENARIO-ID
         TextInputDialog td = new TextInputDialog();
+        td.setTitle("Load Game Description");
         td.setHeaderText("Provide the ID of the scenario you want to play. Will search for the file named SCENARIO-{ID} in the predefined medialab folder");
+        td.getDialogPane().setMaxWidth(500);
         td.showAndWait();
         String scenarioId = td.getEditor().getText();
         System.out.printf("User provided %s ID%n", scenarioId);
@@ -295,9 +297,11 @@ public class GameGui extends Application{
             dialog.setTitle("Error");
             ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
             //Setting the content of the dialog
-            dialog.setContentText("There is an error with the scenario ID you tried to load!");
+            String ContentText = String.format("There is an error with the scenario ID (%s) you tried to load!", scenarioId);
+            dialog.setContentText(ContentText);
             //Adding buttons to the dialog pane
             dialog.getDialogPane().getButtonTypes().add(type);
+            dialog.getDialogPane().setMinSize(100,100);
             dialog.showAndWait();
         }
         this.gameDescription = description;
