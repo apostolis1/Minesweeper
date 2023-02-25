@@ -36,6 +36,8 @@ public class Handler implements EventHandler<MouseEvent>{
             System.out.println("Left Click");
             System.out.println(tileClicked.x);
             System.out.println(tileClicked.y);
+            game.IncreaseNumberOfMoves();
+            System.out.println("Number of moves: " + game.getNumberOfMoves());
 //            Check if the user clicked on a mine
             if (game.isTileMine(tileClicked.x, tileClicked.y)) {
                 game.gameLoss();

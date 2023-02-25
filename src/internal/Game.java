@@ -8,7 +8,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Game {
-    int gridSize, numberOfMoves, numberOfMines;
+    int gridSize;
+
+    public int getNumberOfMoves() {
+        return numberOfMoves;
+    }
+
+    int numberOfMoves;
+    int numberOfMines;
     boolean hasSuperMine;
     final String minesTextLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/mines.txt";
     TileInternal [][] grid;
@@ -212,5 +219,9 @@ public class Game {
             }
         }
         return result;
+    }
+
+    public void IncreaseNumberOfMoves() {
+        this.numberOfMoves++;
     }
 }
