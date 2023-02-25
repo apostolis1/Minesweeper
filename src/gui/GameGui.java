@@ -347,6 +347,12 @@ public class GameGui extends Application{
             @Override
             public void run() {
                 Platform.runLater(() -> {
+                    // Check if timer is zero, then the user loses
+                    if (internalGame.getSecondsRemaining() == 0) {
+                        internalGame.gameLoss();
+                        gameLoss();
+                        return ;
+                    }
                     internalGame.decreaseSeconds();
                     updateInfoPanelFromGame();
                 });
@@ -365,6 +371,13 @@ public class GameGui extends Application{
                 t.updateTileFromInternal(tInternal);
             }
         }
+    }
+
+    @Override
+    public void stop() {
+        // Override the method to close our timer if the timer exists
+        if (secondsTimer != null)
+            secondsTimer.cancel();
     }
     public static void main(String[] args) {
         launch(args);
