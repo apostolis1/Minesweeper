@@ -1,20 +1,24 @@
 package internal;
 
+import gui.GameGui;
 import reader.Description;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Game {
     int gridSize;
-
+    Timer secondsTimer;
+    GameGui gameGui;
     public int getNumberOfMoves() {
         return numberOfMoves;
     }
 
-    int numberOfMoves;
+    int numberOfMoves, secondsRemaining;
     int numberOfMines;
     boolean hasSuperMine;
     final String minesTextLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/mines.txt";
@@ -32,9 +36,10 @@ public class Game {
         return gridSize;
     }
 
-    public Game(int gridSize, int numberOfMines, boolean hasSuperMine) {
+    public Game(int gridSize, int numberOfMines, boolean hasSuperMine, int secondsRemaining) {
         this.gridSize = gridSize;
         this.numberOfMoves = 0;
+        this.secondsRemaining = secondsRemaining;
         this.numberOfMines = numberOfMines;
         this.hasSuperMine = hasSuperMine;
         this.grid = new TileInternal[this.gridSize][this.gridSize];
@@ -78,7 +83,7 @@ public class Game {
     }
 
     public Game(Description description) {
-        this(description.getGridSize(), description.getNumberOfMines(), (description.getSuperMine() == 1));
+        this(description.getGridSize(), description.getNumberOfMines(), (description.getSuperMine() == 1), description.getTime());
     }
 
     void tileLeftClicked(int x, int y) {
@@ -236,5 +241,17 @@ public class Game {
 
     public void IncreaseNumberOfMoves() {
         this.numberOfMoves++;
+    }
+
+    public int getSecondsRemaining() {
+        return secondsRemaining;
+    }
+
+    public void setSecondsRemaining(int secondsRemaining) {
+        this.secondsRemaining = secondsRemaining;
+    }
+
+    public void decreaseSeconds() {
+        this.secondsRemaining--;
     }
 }

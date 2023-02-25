@@ -3,6 +3,7 @@ package gui;
 import exception.InvalidDescriptionException;
 import exception.InvalidValueException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -26,12 +27,15 @@ import sun.security.krb5.internal.crypto.Des;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameGui extends Application{
     GridPane grid, informationPane;
     BorderPane mainPane;
     Label labelMines, labelFlags, labelTimeRemaining;
     Game internalGame;
+    Timer secondsTimer;
     Description gameDescription;
     final String medialabLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/";
     @Override
@@ -248,6 +252,8 @@ public class GameGui extends Application{
 
 
     public void gameLoss() {
+        // Stop the timer
+        secondsTimer.cancel();
         //Creating a dialog
         Dialog<String> dialog = new Dialog<String>();
         //Setting the title
@@ -334,6 +340,16 @@ public class GameGui extends Application{
 //        Create a new game for the given description
 //        this.internalGame = new internal.Game(10, 10, true);
         this.internalGame = new Game(gameDescription);
+        secondsTimer = new Timer();
+        secondsTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    internalGame.decreaseSeconds();
+                    updateInfoPanelFromGame();
+                });
+            }
+        }, 1000, 1000);
         grid = this.initGridFromGame();
         mainPane.setCenter(grid);
         this.updateInfoPanelFromGame();
@@ -359,5 +375,7 @@ public class GameGui extends Application{
         this.labelFlags.setText(Integer.toString(flagsSet));
         // Update number of mines in current game
         this.labelMines.setText(Integer.toString(internalGame.getNumberOfMines()));
+        // Update time remaining
+        this.labelTimeRemaining.setText((Integer.toString(internalGame.getSecondsRemaining())));
     }
 }
