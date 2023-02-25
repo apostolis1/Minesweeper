@@ -109,6 +109,20 @@ public class GameGui extends Application{
         Menu detailsMenu = new Menu("Details");
         MenuItem b1 = new MenuItem("Rounds");
         MenuItem b2 = new MenuItem("Solution");
+        b2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Return if the game has not yet started
+                if (internalGame == null)
+                    return ;
+                if (secondsTimer != null)
+                    secondsTimer.cancel();
+                internalGame.revealSolution();
+                revealSolution();
+            }
+
+        });
+
         detailsMenu.getItems().add(b1);
         detailsMenu.getItems().add(b2);
 
@@ -253,7 +267,8 @@ public class GameGui extends Application{
 
     public void gameLoss() {
         // Stop the timer
-        secondsTimer.cancel();
+        if (secondsTimer != null)
+            secondsTimer.cancel();
         //Creating a dialog
         Dialog<String> dialog = new Dialog<String>();
         //Setting the title
@@ -392,5 +407,10 @@ public class GameGui extends Application{
         this.labelMines.setText(Integer.toString(internalGame.getNumberOfMines()));
         // Update time remaining
         this.labelTimeRemaining.setText((Integer.toString(internalGame.getSecondsRemaining())));
+    }
+
+    private void revealSolution() {
+        this.updateGridFromGame();
+        this.gameLoss();
     }
 }

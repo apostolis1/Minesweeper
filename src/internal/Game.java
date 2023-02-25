@@ -254,4 +254,17 @@ public class Game {
     public void decreaseSeconds() {
         this.secondsRemaining--;
     }
+
+    public void revealSolution() {
+    // To be called when the user clicks the "Reveal" button
+    // Simply set each bomb's isRevealed to true and call gameLoss
+        for (int i =0; i< this.gridSize; ++i) {
+            for (int j = 0; j < this.gridSize; ++j) {
+                TileInternal t = this.grid[i][j];
+                if (t.getMine())
+                    t.setRevealed(true);
+            }
+        }
+        gameLoss();
+    }
 }
