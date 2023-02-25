@@ -268,6 +268,8 @@ public class GameGui extends Application{
     }
 
     public void gameWin() {
+        // Stop the timer
+        secondsTimer.cancel();
         //Creating a dialog
         Dialog<String> dialog = new Dialog<String>();
         //Setting the title
