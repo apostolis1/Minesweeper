@@ -44,7 +44,7 @@ public class GameGui extends Application{
         startNewGame();
         MenuBar mBar = getMenuBar();
         applicationVBox.getChildren().addAll(mBar, informationPane, this.mainPane);
-        Scene scene = new Scene(applicationVBox, 9*50, 600);
+        Scene scene = new Scene(applicationVBox, 16*50, 300+16*50);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -86,6 +86,19 @@ public class Game {
     }
 
     public void tileRightClicked(int x, int y) {
+        if (this.isTileSuperMine(x, y) && getNumberOfMoves() < 4) {
+            System.out.println("You have clicked on the supermine!");
+            for (int i = 0; i < getGridSize(); i++) {
+                // Remove any flags already set on the tiles we will reveal
+                grid[i][y].setFlagSet(false);
+                grid[x][i].setFlagSet(false);
+                // Reveal the tiles
+                grid[i][y].setRevealed(true);
+                grid[x][i].setRevealed(true);
+
+            }
+            return ; // Return before making the tile right-clicked since it is revealed already
+        }
         grid[x][y].rightClicked();
     }
 
