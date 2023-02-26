@@ -26,6 +26,7 @@ import sun.security.krb5.internal.crypto.Des;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,12 +38,15 @@ public class GameGui extends Application{
     Game internalGame;
     Timer secondsTimer;
     Description gameDescription;
+
+    StatsManager statsManager;
     final String medialabLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/";
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Minesweeper");
         VBox applicationVBox = new VBox();
 //        getGameDescription();
+        this.statsManager = new StatsManager();
         this.mainPane = new BorderPane();
         this.informationPane = getInformationPane();
         startNewGame();
@@ -109,6 +113,15 @@ public class GameGui extends Application{
         Menu detailsMenu = new Menu("Details");
         MenuItem b1 = new MenuItem("Rounds");
         MenuItem b2 = new MenuItem("Solution");
+
+        b1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                LinkedList<Stats> mostRecentStats = statsManager.getMostRecentStats();
+                for (Stats s:mostRecentStats)
+                    System.out.println(s);
+            }
+        });
         b2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -269,6 +282,8 @@ public class GameGui extends Application{
         // Stop the timer
         if (secondsTimer != null)
             secondsTimer.cancel();
+
+        statsManager.addStats(internalGame.getStatsFromGame(false));
         //Creating a dialog
         Dialog<String> dialog = new Dialog<String>();
         //Setting the title
@@ -284,7 +299,9 @@ public class GameGui extends Application{
 
     public void gameWin() {
         // Stop the timer
-        secondsTimer.cancel();
+        if (secondsTimer != null)
+            secondsTimer.cancel();
+        statsManager.addStats(internalGame.getStatsFromGame(true));
         //Creating a dialog
         Dialog<String> dialog = new Dialog<String>();
         //Setting the title
@@ -357,6 +374,8 @@ public class GameGui extends Application{
 //        Create a new game for the given description
 //        this.internalGame = new internal.Game(10, 10, true);
         this.internalGame = new Game(gameDescription);
+        if (secondsTimer != null)
+            secondsTimer.cancel();
         secondsTimer = new Timer();
         secondsTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
