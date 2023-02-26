@@ -43,7 +43,7 @@ public class Stats {
         this.playerWon = playerWon;
     }
 
-    private String getPlayerWon() {
+    public String getPlayerWon() {
         if (playerWon)
             return "Player";
         return "CPU";

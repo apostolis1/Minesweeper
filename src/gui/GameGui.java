@@ -22,7 +22,6 @@ import reader.Description;
 import reader.Reader;
 import internal.Game;
 import internal.TileInternal;
-import sun.security.krb5.internal.crypto.Des;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -117,9 +116,7 @@ public class GameGui extends Application{
         b1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                LinkedList<Stats> mostRecentStats = statsManager.getMostRecentStats();
-                for (Stats s:mostRecentStats)
-                    System.out.println(s);
+                showDetailsPopup();
             }
         });
         b2.setOnAction(new EventHandler<ActionEvent>() {
@@ -315,6 +312,37 @@ public class GameGui extends Application{
         startNewGame();
     }
 
+    private void showDetailsPopup() {
+        LinkedList<Stats> mostRecentStats = statsManager.getMostRecentStats();
+        for (Stats s:mostRecentStats)
+            System.out.println(s);
+
+        Dialog<Object> dialog = new Dialog<>();
+        dialog.setTitle("Details");
+        dialog.setResizable(true);
+
+        Label label1 = new Label("Number of mines");
+        Label label2 = new Label("Number of tries");
+        Label label3 = new Label("Time");
+        Label label4 = new Label("Winner");
+        GridPane grid = new GridPane();
+        grid.add(label1, 1, 1);
+        grid.add(label2, 2, 1);
+        grid.add(label3, 3, 1);
+        grid.add(label4, 4, 1);
+
+        for (int i=0; i<mostRecentStats.size(); i++){
+            Stats s = mostRecentStats.get(i);
+            grid.add(new Label(Integer.toString(s.getMines())), 1, i+2);
+            grid.add(new Label(Integer.toString(s.getTries())), 2, i+2);
+            grid.add(new Label(Integer.toString(s.getTime())), 3, i+2);
+            grid.add(new Label(s.getPlayerWon()), 4, i+2);
+        }
+        dialog.getDialogPane().setContent(grid);
+        ButtonType buttonTypeOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
+        dialog.showAndWait();
+    }
 
     private void getGameDescription() {
         // Create a text input dialog to get the SCENARIO-ID
