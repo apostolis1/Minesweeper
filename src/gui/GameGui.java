@@ -42,8 +42,9 @@ public class GameGui extends Application{
     Timer secondsTimer;
     Description gameDescription;
     private final Integer INFO_PANE_HEIGHT = 75;
+    private final Integer MENU_BAR_HEIGHT = 30;
     private final String INFO_STYLE = "-fx-font-size: 11pt;";
-    private final Integer WIDTH = 4*144, HEIGHT = INFO_PANE_HEIGHT +WIDTH + 50;
+    private final Integer WIDTH = 4*144, HEIGHT = INFO_PANE_HEIGHT + WIDTH + MENU_BAR_HEIGHT;
 
     StatsManager statsManager;
     final String medialabLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/";
@@ -101,6 +102,8 @@ public class GameGui extends Application{
 
     private MenuBar getMenuBar() {
         MenuBar mb = new MenuBar();
+        mb.setMinHeight(MENU_BAR_HEIGHT);
+        mb.setMaxHeight(MENU_BAR_HEIGHT);
         Menu applicationMenu = new Menu("Application");
         // create menu items
         MenuItem m1 = new MenuItem("Create");
