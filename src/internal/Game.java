@@ -1,6 +1,7 @@
 package internal;
 
 import gui.GameGui;
+import gui.Stats;
 import reader.Description;
 
 import java.io.FileWriter;
@@ -18,7 +19,7 @@ public class Game {
         return numberOfMoves;
     }
 
-    int numberOfMoves, secondsRemaining;
+    int numberOfMoves, secondsRemaining, initialSeconds;
     int numberOfMines;
     boolean hasSuperMine;
     final String minesTextLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/mines.txt";
@@ -40,6 +41,7 @@ public class Game {
         this.gridSize = gridSize;
         this.numberOfMoves = 0;
         this.secondsRemaining = secondsRemaining;
+        this.initialSeconds = secondsRemaining;
         this.numberOfMines = numberOfMines;
         this.hasSuperMine = hasSuperMine;
         this.grid = new TileInternal[this.gridSize][this.gridSize];
@@ -266,5 +268,9 @@ public class Game {
             }
         }
         gameLoss();
+    }
+
+    public Stats getStatsFromGame(boolean playerWon) {
+        return new Stats(numberOfMines, numberOfMoves, initialSeconds - secondsRemaining, playerWon);
     }
 }
