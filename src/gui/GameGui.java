@@ -11,6 +11,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
@@ -319,26 +322,33 @@ public class GameGui extends Application{
 
         Dialog<Object> dialog = new Dialog<>();
         dialog.setTitle("Details");
-        dialog.setResizable(true);
+        dialog.setResizable(false);
 
-        Label label1 = new Label("Number of mines");
-        Label label2 = new Label("Number of tries");
-        Label label3 = new Label("Time");
-        Label label4 = new Label("Winner");
-        GridPane grid = new GridPane();
-        grid.add(label1, 1, 1);
-        grid.add(label2, 2, 1);
-        grid.add(label3, 3, 1);
-        grid.add(label4, 4, 1);
+        TableView<Stats> table = new TableView<Stats>();
 
-        for (int i=0; i<mostRecentStats.size(); i++){
-            Stats s = mostRecentStats.get(i);
-            grid.add(new Label(Integer.toString(s.getMines())), 1, i+2);
-            grid.add(new Label(Integer.toString(s.getTries())), 2, i+2);
-            grid.add(new Label(Integer.toString(s.getTime())), 3, i+2);
-            grid.add(new Label(s.getPlayerWon()), 4, i+2);
-        }
-        dialog.getDialogPane().setContent(grid);
+        TableColumn<Stats, Integer> minesCol = new TableColumn<>("Number of mines");
+        minesCol.setCellValueFactory(
+                new PropertyValueFactory<Stats, Integer>("mines"));
+        minesCol.setMinWidth(150);
+
+        TableColumn<Stats, Integer> triesCol = new TableColumn<>("Number of tries");
+        triesCol.setCellValueFactory(
+                new PropertyValueFactory<Stats, Integer>("tries"));
+        triesCol.setMinWidth(150);
+
+        TableColumn<Stats, Integer> timeCol = new TableColumn<>("Time");
+        timeCol.setCellValueFactory(
+                new PropertyValueFactory<Stats, Integer>("time"));
+        timeCol.setMinWidth(100);
+
+        TableColumn<Stats, String> winnerCol = new TableColumn<>("Winner");
+        winnerCol.setCellValueFactory(
+                new PropertyValueFactory<Stats, String>("playerWonString"));
+        winnerCol.setMinWidth(150);
+        table.getColumns().addAll(minesCol, triesCol, timeCol, winnerCol);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        mostRecentStats.forEach(s -> table.getItems().add(s));
+        dialog.getDialogPane().setContent(table);
         ButtonType buttonTypeOk = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
         dialog.showAndWait();
