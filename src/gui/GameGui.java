@@ -40,6 +40,8 @@ public class GameGui extends Application{
     Game internalGame;
     Timer secondsTimer;
     Description gameDescription;
+    private final Integer INFO_PANE_HEIGHT = 75;
+    private final Integer WIDTH = 4*144, HEIGHT = INFO_PANE_HEIGHT +WIDTH + 50;
 
     StatsManager statsManager;
     final String medialabLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/";
@@ -53,8 +55,9 @@ public class GameGui extends Application{
         this.informationPane = getInformationPane();
         startNewGame();
         MenuBar mBar = getMenuBar();
+        this.informationPane.setMinHeight(INFO_PANE_HEIGHT);
         applicationVBox.getChildren().addAll(mBar, informationPane, this.mainPane);
-        Scene scene = new Scene(applicationVBox, 16*50, 300+16*50);
+        Scene scene = new Scene(applicationVBox, WIDTH, HEIGHT);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -389,9 +392,13 @@ public class GameGui extends Application{
         // The first call that simply creates the grid pane according to the internal game object
         GridPane grid = new GridPane();
         grid.addEventFilter(MouseEvent.MOUSE_CLICKED, new Handler(this.internalGame, this));
+
+        // Calculate size of tile, based on how many we want to fit
+        int tileSize = WIDTH / this.internalGame.getGridSize();
+
         for (int i =0; i< this.internalGame.getGridSize(); ++i) {
             for (int j = 0; j < this.internalGame.getGridSize(); ++j) {
-                Tile btn = new Tile("", i,j);
+                Tile btn = new Tile("", i,j, tileSize);
 
                 grid.getChildren().add(btn);
                 GridPane.setRowIndex(btn, i);

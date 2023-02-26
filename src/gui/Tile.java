@@ -8,11 +8,11 @@ public class Tile extends Button {
     public int x,y;
     private final String flagUrl = "https://icons.iconarchive.com/icons/flaticonmaker/flat-style/256/flag-icon.png";
     private final String mineUrl = "https://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Actions-edit-bomb-icon.png";
-    public Tile(String text, int x, int y) {
+    public Tile(String text, int x, int y, int size) {
         super(text);
         this.x = x;
         this.y = y;
-        this.setMinSize(50,50);
+        this.setMinSize(size,size);
     }
 
     public void setBackgroundReveal(){
