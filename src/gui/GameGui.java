@@ -389,6 +389,17 @@ public class GameGui extends Application{
         try {
             String filename = String.format("SCENARIO-%s.txt", scenarioId);
             description = reader.getFileContents(filename);
+            Dialog<String> dialog = new Dialog<String>();
+            //Setting the title
+            dialog.setTitle("Success");
+            ButtonType type = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
+            //Setting the content of the dialog
+            String ContentText = String.format("Successfully loaded scenario (%s)", scenarioId);
+            dialog.setContentText(ContentText);
+            //Adding buttons to the dialog pane
+            dialog.getDialogPane().getButtonTypes().add(type);
+            dialog.getDialogPane().setMinSize(100,100);
+            dialog.show();
         } catch (InvalidDescriptionException | InvalidValueException e) {
             System.out.println("Popup will be created");
             Dialog<String> dialog = new Dialog<String>();
