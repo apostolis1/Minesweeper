@@ -34,6 +34,12 @@ public class Stats {
     }
 
     int mines, tries, time;
+
+    public String getPlayerWonString() {
+        return playerWonString;
+    }
+
+    private String playerWonString;
     boolean playerWon;
 
     public Stats(int mines, int tries, int time, boolean playerWon) {
@@ -41,9 +47,11 @@ public class Stats {
         this.tries = tries;
         this.time = time;
         this.playerWon = playerWon;
+        this.playerWonString = getPlayerWon();
+
     }
 
-    public String getPlayerWon() {
+    private String getPlayerWon() {
         if (playerWon)
             return "Player";
         return "CPU";
