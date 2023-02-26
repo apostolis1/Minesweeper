@@ -8,6 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -41,6 +42,7 @@ public class GameGui extends Application{
     Timer secondsTimer;
     Description gameDescription;
     private final Integer INFO_PANE_HEIGHT = 75;
+    private final String INFO_STYLE = "-fx-font-size: 11pt;";
     private final Integer WIDTH = 4*144, HEIGHT = INFO_PANE_HEIGHT +WIDTH + 50;
 
     StatsManager statsManager;
@@ -56,6 +58,7 @@ public class GameGui extends Application{
         startNewGame();
         MenuBar mBar = getMenuBar();
         this.informationPane.setMinHeight(INFO_PANE_HEIGHT);
+        this.informationPane.setAlignment(Pos.CENTER);
         applicationVBox.getChildren().addAll(mBar, informationPane, this.mainPane);
         Scene scene = new Scene(applicationVBox, WIDTH, HEIGHT);
         primaryStage.setResizable(false);
@@ -65,22 +68,34 @@ public class GameGui extends Application{
 
     private GridPane getInformationPane() {
         GridPane infoPane = new GridPane();
+        infoPane.setHgap(10);
+        infoPane.setHgap(12);
 
-        Label label1 = new Label("Mines in internal.Game");
+        Label label1 = new Label("Mines");
+        label1.setStyle(INFO_STYLE);
         infoPane.add(label1, 0,0);
+
         labelMines = new Label("0");
+        labelMines.setStyle(INFO_STYLE);
         infoPane.add(labelMines, 1,0);
 
         Label labelTime = new Label("Time Remaining (secs)");
+        labelTime.setStyle(INFO_STYLE);
         infoPane.add(labelTime, 0,1);
+
         labelTimeRemaining = new Label("0");
+        labelTimeRemaining.setStyle(INFO_STYLE);
         infoPane.add(labelTimeRemaining, 1, 1);
 
         Label flagsLabel = new Label("Flags placed");
+        flagsLabel.setStyle(INFO_STYLE);
         infoPane.add(flagsLabel, 0,2);
+
         labelFlags = new Label("0");
+        labelFlags.setStyle(INFO_STYLE);
         infoPane.add(labelFlags, 1,2);
-        infoPane.setStyle("-fx-background-color: " + "green" + ";");
+
+        infoPane.setStyle("-fx-background-color: " + "PaleTurquoise" + ";");
         return infoPane;
     }
 
