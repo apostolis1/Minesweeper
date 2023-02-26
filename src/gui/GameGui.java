@@ -168,9 +168,8 @@ public class GameGui extends Application{
     private void createDescriptionDialog() {
         Dialog<Description> dialog = new Dialog<>();
         dialog.setTitle("Create Scenario");
-        dialog.setHeaderText("This is a custom dialog. Enter info and \n" +
-                "press Okay (or click title bar 'X' for cancel).");
-        dialog.setResizable(true);
+        dialog.setHeaderText("Enter the description information and press \"Create\"");
+        dialog.setResizable(false);
 
         Label label1 = new Label("SCENARIO-ID (filename will be for example SCENARIO-1.txt): ");
         Label label2 = new Label("Level (1 or 2): ");
