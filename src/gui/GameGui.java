@@ -17,7 +17,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -287,7 +286,6 @@ public class GameGui extends Application{
             e.printStackTrace();
         }
     }
-
     public Tile getTileByCoordinates(int x, int y) {
         for (Node tile : this.grid.getChildren()) {
             Tile t = (Tile) tile;
@@ -378,8 +376,11 @@ public class GameGui extends Application{
         // Create a text input dialog to get the SCENARIO-ID
         TextInputDialog td = new TextInputDialog();
         td.setTitle("Load Game Description");
-        td.setHeaderText("Provide the ID of the scenario you want to play. Will search for the file named SCENARIO-{ID} in the predefined medialab folder");
+        td.setGraphic(null);
+        td.setHeaderText(null);
+        td.setContentText("Provide the ID of the scenario you want to play. Will search for the file named \nSCENARIO-{ID} in the predefined medialab folder");
         td.getDialogPane().setMaxWidth(500);
+        td.getDialogPane().setMinHeight(200);
         td.showAndWait();
         String scenarioId = td.getEditor().getText();
         System.out.printf("User provided %s ID%n", scenarioId);
