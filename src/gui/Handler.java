@@ -38,7 +38,10 @@ public class Handler implements EventHandler<MouseEvent>{
             System.out.println(tileClicked.y);
             game.IncreaseNumberOfMoves();
             System.out.println("Number of moves: " + game.getNumberOfMoves());
-//            Check if the user clicked on a mine
+//            Remove flag if set
+            if (game.getTileByCoordinates(tileClicked.x, tileClicked.y).getFlagSet())
+                game.getTileByCoordinates(tileClicked.x, tileClicked.y).setFlagSet(false);
+        //            Check if the user clicked on a mine
             if (game.isTileMine(tileClicked.x, tileClicked.y)) {
                 game.gameLoss();
                 gameGui.gameLoss();
