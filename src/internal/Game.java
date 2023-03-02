@@ -93,6 +93,11 @@ public class Game {
     }
 
     public void tileRightClicked(int x, int y) {
+        // Check if the user has already set a number of flags equal to the number of mines
+        // and if he is trying to set another flag, return
+        if (getNumberOfFlagsSet() >= getNumberOfMines() && !getTileByCoordinates(x,y).getFlagSet())
+            return ;
+//        Supermine check
         if (this.isTileSuperMine(x, y) && getNumberOfMoves() < 4) {
             System.out.println("You have clicked on the supermine!");
             for (int i = 0; i < getGridSize(); i++) {
