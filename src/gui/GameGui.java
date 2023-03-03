@@ -1,5 +1,6 @@
 package gui;
 
+import config.ConfigHandler;
 import exception.InvalidDescriptionException;
 import exception.InvalidValueException;
 import javafx.application.Application;
@@ -46,7 +47,6 @@ public class GameGui extends Application{
     private final Integer WIDTH = 4*144, HEIGHT = INFO_PANE_HEIGHT + WIDTH + MENU_BAR_HEIGHT;
 
     StatsManager statsManager;
-    final String medialabLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/";
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Minesweeper");
@@ -276,6 +276,8 @@ public class GameGui extends Application{
         Optional<Description> result = dialog.showAndWait();
         // No matter what happened, we want to write the values in the txt file as explained above
         try {
+            ConfigHandler ch = new ConfigHandler();
+            String medialabLocation = ch.getMedialabFolderPath();
             String scenarioLocation = medialabLocation + "SCENARIO-" + textScenarioId.getText() + ".txt";
             FileWriter myWriter = new FileWriter(scenarioLocation);
             myWriter.write(String.format("%s%n%s%n%s%n%s", textLevel.getText(), textNumberOfMines.getText(), textTime.getText(), textSupermine.getText()));

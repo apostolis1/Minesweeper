@@ -1,5 +1,6 @@
 package internal;
 
+import config.ConfigHandler;
 import gui.GameGui;
 import gui.Stats;
 import reader.Description;
@@ -22,7 +23,7 @@ public class Game {
     int numberOfMoves, secondsRemaining, initialSeconds;
     int numberOfMines;
     boolean hasSuperMine;
-    final String minesTextLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/mines.txt";
+//    final String minesTextLocation = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/mines.txt";
     TileInternal [][] grid;
 
     public TileInternal[][] getGrid() {
@@ -218,6 +219,8 @@ public class Game {
 
     public void writeMineLocations(ArrayList<Integer> mineIndices, int superMinePosition) {
         try {
+            ConfigHandler ch = new ConfigHandler();
+            String minesTextLocation = ch.getMedialabFolderPath() + "mines.txt";
             FileWriter myWriter = new FileWriter(minesTextLocation);
             for (int mineIndex : mineIndices) {
                 System.out.printf("Writing to file %d%n", mineIndex);

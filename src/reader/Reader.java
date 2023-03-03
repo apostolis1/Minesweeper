@@ -1,7 +1,8 @@
 package reader;
 
 import exception.*;
-import org.omg.CORBA.DynAnyPackage.Invalid;
+import config.ConfigHandler;
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,10 +10,12 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Reader {
-//    A class to read contents from files and return a Description
-    final String DescriptionFolderPath = "/home/apostolis/Apostolis/Shmmy/multimedia/MinesweeperJava/medialab/";
+//    A class to read content from files and return a Description
+    String DescriptionFolderPath;
 
     public Reader() {
+        ConfigHandler ch = new ConfigHandler();
+        DescriptionFolderPath = ch.getMedialabFolderPath();
         System.out.print(DescriptionFolderPath);
     }
 
