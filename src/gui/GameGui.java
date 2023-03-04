@@ -47,6 +47,15 @@ public class GameGui extends Application{
     private final Integer WIDTH = 4*144, HEIGHT = INFO_PANE_HEIGHT + WIDTH + MENU_BAR_HEIGHT;
 
     StatsManager statsManager;
+
+    /**
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set. The primary stage will be embedded in
+     * the browser if the application was launched as an applet.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages and will not be embedded in the browser.
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Minesweeper");
@@ -66,6 +75,12 @@ public class GameGui extends Application{
         primaryStage.show();
     }
 
+    /**
+     * Creates the Information Pane of the application, where
+     * the stats of the game are displayed
+     * Is called at application initialization
+     * @return the InfoPane of the application
+     */
     private GridPane getInformationPane() {
         GridPane infoPane = new GridPane();
         infoPane.setHgap(10);
@@ -99,6 +114,11 @@ public class GameGui extends Application{
         return infoPane;
     }
 
+    /**
+     * Creates the menu bar of the application
+     * Is called at application initialization
+     * @return the menu bar
+     */
     private MenuBar getMenuBar() {
         MenuBar mb = new MenuBar();
         mb.setMinHeight(MENU_BAR_HEIGHT);
@@ -164,6 +184,11 @@ public class GameGui extends Application{
         return mb;
     }
 
+    /**
+     * Creates a popup dialog where the user can enter information about the new Description
+     * they want to create. Does not throw an exception on invalid parameters, instead the Description is saved
+     * and the exception must be raised when it is loaded (as per requirements)
+     */
     private void createDescriptionDialog() {
         Dialog<Description> dialog = new Dialog<>();
         dialog.setTitle("Create Scenario");
@@ -288,6 +313,15 @@ public class GameGui extends Application{
             e.printStackTrace();
         }
     }
+
+    /**
+     * Returns the Tile object at position (x,y) of the grid
+     * Because of the lack of constant time access when using GridPane, we need to traverse the whole grid
+     * and check the coordinates. For small grid sizes as the ones we are dealing with here, this is not a problem
+     * @param x row of the tile
+     * @param y column of the tile
+     * @return the Tile at position x,y
+     */
     public Tile getTileByCoordinates(int x, int y) {
         for (Node tile : this.grid.getChildren()) {
             Tile t = (Tile) tile;
@@ -298,6 +332,11 @@ public class GameGui extends Application{
     }
 
 
+    /**
+     * Method to be called when the user loses the game
+     * Saves the game stats and creates a popup dialog
+     * It also stops the timer if it wasn't stopped already to avoid having multiple threads decreasing time
+     */
     public void gameLoss() {
         // Stop the timer
         if (secondsTimer != null)
@@ -317,6 +356,11 @@ public class GameGui extends Application{
         startNewGame();
     }
 
+    /**
+     * Method to be called when the user wins the game
+     * Saves the game stats and creates a popup dialog
+     * It also stops the timer if it wasn't stopped already to avoid having multiple threads decreasing time
+     */
     public void gameWin() {
         // Stop the timer
         if (secondsTimer != null)
@@ -335,6 +379,10 @@ public class GameGui extends Application{
         startNewGame();
     }
 
+    /**
+     * Creates the Rounds popup dialog that displays stats of the last 5 played games
+     * Uses a TableView
+     */
     private void showDetailsPopup() {
         LinkedList<Stats> mostRecentStats = statsManager.getMostRecentStats();
         for (Stats s:mostRecentStats)
@@ -374,6 +422,12 @@ public class GameGui extends Application{
         dialog.showAndWait();
     }
 
+    /**
+     * Creates a popup dialog for the user to input the ID of the Description they want to load
+     * Tries to load the corresponding file SCENARIO-ID.txt from the predefined folder and create a Description object
+     * from its contents.
+     * In case of an Exception it handles it and creates a popup dialog informing the user
+     */
     private void getGameDescription() {
         // Create a text input dialog to get the SCENARIO-ID
         TextInputDialog td = new TextInputDialog();
@@ -419,6 +473,11 @@ public class GameGui extends Application{
         this.gameDescription = description;
     }
 
+    /**
+     * Creates the GUI version of the Game
+     * It creates a GridPane of Tile objects based on the internalGame
+     * @return the GridPane that represents the game
+     */
     private GridPane initGridFromGame() {
         // The first call that simply creates the grid pane according to the internal game object
         GridPane grid = new GridPane();
@@ -441,6 +500,12 @@ public class GameGui extends Application{
         return grid;
     }
 
+    /**
+     * Starts a new game
+     * Tries to find the loaded Description object and create an internalGame from it
+     * Does not throw an exception since if the Description is invalid the user would have been notified at
+     * Description loading
+     */
     public void startNewGame() {
 //        Check description to see if it was loaded correctly
         if (this.gameDescription == null) {
@@ -473,6 +538,10 @@ public class GameGui extends Application{
         this.updateInfoPanelFromGame();
     }
 
+    /**
+     * Updates the GUI grid according to the internal game
+     * Calls updateTileFromInternal for each GUI Tile with the corresponding internal one
+     */
     public void updateGridFromGame() {
         for (int i =0; i< this.internalGame.getGridSize(); ++i) {
             for (int j = 0; j < this.internalGame.getGridSize(); ++j) {
@@ -483,17 +552,29 @@ public class GameGui extends Application{
         }
     }
 
+    /**
+     * Called when the application is stopped
+     * Override it here to stop the timer if it isn't stopped already
+     */
     @Override
     public void stop() {
         // Override the method to close our timer if the timer exists
         if (secondsTimer != null)
             secondsTimer.cancel();
     }
+
+    /**
+     * Main method, used to create and run the app
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
-
+    /**
+     * Updates the Information Pane according to internalGame
+     * Updates the GUI fields flags set, mines set, time remaining
+     */
     public void updateInfoPanelFromGame() {
         // Update the label for flags
         int flagsSet = this.internalGame.getNumberOfFlagsSet();
@@ -504,6 +585,13 @@ public class GameGui extends Application{
         this.labelTimeRemaining.setText((Integer.toString(internalGame.getSecondsRemaining())));
     }
 
+    /**
+     * Reveals the solution of the game on the GUI
+     * Must be called after internalGame.revealSolution is called, because the latter is responsible for changing the
+     * appropriate fields on the internalGame object
+     * This method simply updates the GUI grid based on the changes already done in internalGame.revealSolution and
+     * calls gameLoss
+     */
     private void revealSolution() {
         this.updateGridFromGame();
         this.gameLoss();
