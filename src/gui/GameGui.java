@@ -147,10 +147,19 @@ public class GameGui extends Application{
                 startNewGame();
             }
         });
+
+        MenuItem m4 = new MenuItem("Exit");
+        m4.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Platform.exit();
+            }
+        });
         // add menu items to menu
         applicationMenu.getItems().add(m1);
         applicationMenu.getItems().add(m2);
         applicationMenu.getItems().add(m3);
+        applicationMenu.getItems().add(m4);
 
         Menu detailsMenu = new Menu("Details");
         MenuItem b1 = new MenuItem("Rounds");
